@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Category;
-use App\Http\Requests\CreateCategoryRequest;
-use Illuminate\Http\Request;
+use App\Http\Requests\Category\CreateCategoryRequest;
+use App\Http\Requests\Category\UpdateCategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -39,7 +39,7 @@ class CategoryController extends Controller
             'name' => $request->name,
         ]);
 
-        $request->session()->flash('success', "{$request->name} category has been created successfully");
+        session()->flash('success', "{$request->name} category has been created successfully");
 
         return redirect(route('categories.index'));
     }
@@ -62,19 +62,28 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Category $category)
     {
+        return view('categories.create')->with('category', $category);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param int $id
+     * @param int   $id
+     * @param mixed $category
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCategoryRequest $request, Category $category)
     {
+        $category->update([
+            'name' => $request->name,
+        ]);
+
+        session()->flash('success', "{$request->name} category has been updated successfully");
+
+        return redirect(route('categories.index'));
     }
 
     /**
