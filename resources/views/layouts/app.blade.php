@@ -74,6 +74,7 @@
 
         <main class="py-4">
             @auth
+
             <div class="container">
                 <div class="row">
                     <div class="col-md-4">
@@ -82,11 +83,16 @@
                                 <a href="#">Posts</a>
                             </li>
                             <li class="list-group-item">
-                                <a href="#">Categories</a>
+                                <a href={{ route('categories.create')}}>Categories</a>
                             </li>
                         </ul>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-8" style="transition-delay:4s">
+                        @if (session()->has('success'))
+                            <div class="alert alert-success">
+                                {{ session()->get('success') }}
+                            </div>
+                        @endif
                         @yield('content')
                     </div>
                 </div>
