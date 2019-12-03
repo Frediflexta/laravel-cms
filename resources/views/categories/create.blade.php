@@ -3,7 +3,7 @@
 @section('content')
   <div class="card card-default">
     <div class="card-header">
-      {{ isset($category) ? 'Edit Category' : 'Create categories' }}
+      {{ isset($category) ? 'Edit Category' : 'Create Categories' }}
     </div>
     <div class="card-body">
 
