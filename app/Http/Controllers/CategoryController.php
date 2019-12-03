@@ -39,7 +39,7 @@ class CategoryController extends Controller
             'name' => $request->name,
         ]);
 
-        session()->flash('success', "{$request->name} category has been created successfully");
+        session()->flash('success', "\"{$request->name}\" category has been created successfully");
 
         return redirect(route('categories.index'));
     }
@@ -93,7 +93,12 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
+        $category->delete();
+
+        session()->flash('success', "\"{$category->name}\" category has been deleted successfully");
+
+        return redirect(route('categories.index'));
     }
 }
