@@ -8,26 +8,42 @@
   <div class="card card-default">
     <div class="card-header">Posts</div>
     <div class="card-body">
-      <table class="table">
-        <thead>
-          <th><b>Image</b></th>
-          <th><b>Title</b></th>
-          <th></th>
-          <th></th>
-        </thead>
-        <tbody>
-          @foreach ($posts as $post)
-            <tr>
-            <td>
-              <img src="{{asset($post->image)}}" width="120px" height="60px" alt="featured_image">
-            </td>
-            <td><i>{{$post->title}}</i></td>
-            <td><button class="btn btn-info btn-sm">Edit</button></td>
-            <td><button class="btn btn-danger btn-sm">Trash</button></td>
-            </tr>
-          @endforeach
-        </tbody>
-      </table>
+      @if ($posts->count() > 0)
+        <table class="table">
+          <thead>
+            <th><b class="card-title">Image</b></th>
+            <th><b class="card-title">Title</b></th>
+            <th></th>
+            <th></th>
+          </thead>
+          <tbody>
+            @foreach ($posts as $post)
+              <tr>
+                <td>
+                  <img src="{{asset("storage/$post->image")}}" width="100" height="100" alt="featured_image">
+                </td>
+                <td><i>{{$post->title}}</i></td>
+                @if (!$post->trashed())
+                  <td><button class="btn btn-info btn-sm">Edit</button></td>
+                @endif
+                <td>
+                <form action="{{ route('posts.destroy', $post->id) }}" method="POST">
+
+                  @method('DELETE')
+                  @csrf
+
+                  <button class="btn btn-danger btn-sm" type="submit">
+                    {{$post->trashed() ? ' Delete' : 'Trash'}}
+                  </button>
+                </form>
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      @else
+          <h3 class="text-center">No posts are available</h3>
+      @endif
     </div>
   </div>
 
