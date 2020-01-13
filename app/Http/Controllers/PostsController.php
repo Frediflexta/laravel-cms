@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Posts\CreatePostRequest;
+use App\Http\Requests\Posts\UpdatePostRequest;
 use App\Post;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class PostsController extends Controller
 {
@@ -69,8 +68,9 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
+        return view('posts.create')->with('post', $post);
     }
 
     /**
@@ -80,8 +80,25 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdatePostRequest $request, Post $post)
     {
+        $data = $request->only(['title', 'description', 'published_at', 'content']);
+
+        // check for images and delete old one if it exits
+        if ($request->hasFile('image')) {
+            $image = $request->image->store('posts');
+
+            $post->deleteImage();
+
+            $data['image'] = $image;
+        }
+
+        // update attributes
+        $post->update($data);
+
+        session()->flash('success', "{$request->name} category has been updated successfully");
+
+        return redirect(route('posts.index'));
     }
 
     /**
@@ -97,7 +114,7 @@ class PostsController extends Controller
 
         if ($post->trashed()) {
             $post->forceDelete();
-            Storage::delete($post->image);
+            $post->deleteImage();
         } else {
             $post->delete();
         }
@@ -115,5 +132,20 @@ class PostsController extends Controller
         $trashed = $post->onlyTrashed()->get();
 
         return view('posts.index')->withPosts($trashed);
+    }
+
+    /**
+     * Restore trashed posts.
+     *
+     * @param mixed $id
+     */
+    public function restore($id)
+    {
+        // find the post by it's id
+        $post = Post::withTrashed()->where('id', $id)->firstOrFail();
+        // restore it by calling the restore()
+        $post->restore();
+        //redirect to the index page, displaying the posts with the restores
+        return redirect()->back();
     }
 }
