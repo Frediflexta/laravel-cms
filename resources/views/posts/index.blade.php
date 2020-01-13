@@ -23,8 +23,18 @@
                   <img src="{{asset("storage/$post->image")}}" width="100" height="100" alt="featured_image">
                 </td>
                 <td><i>{{$post->title}}</i></td>
-                @if (!$post->trashed())
-                  <td><button class="btn btn-info btn-sm">Edit</button></td>
+                @if ($post->trashed())
+                  <td>
+                  <form action="{{route('restore-trash', $post->id)}}" method="POST">
+
+                      @method('PUT')
+                      @csrf
+
+                      <button class="btn btn-info btn-sm" onclick="window.location.href='{{route('restore-trash', $post->id)}}'" type="submit">Restore</button>
+                    </form>
+                  </td>
+                @else
+                  <td><button class="btn btn-info btn-sm" onclick="window.location.href='{{route('posts.edit', $post->id)}}'" type="submit">Edit</button></td>
                 @endif
                 <td>
                 <form action="{{ route('posts.destroy', $post->id) }}" method="POST">
@@ -33,7 +43,7 @@
                   @csrf
 
                   <button class="btn btn-danger btn-sm" type="submit">
-                    {{$post->trashed() ? ' Delete' : 'Trash'}}
+                    {{$post->trashed() ? 'Delete' : 'Trash'}}
                   </button>
                 </form>
                 </td>
