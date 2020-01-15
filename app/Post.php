@@ -19,4 +19,12 @@ class Post extends Model
     {
         Storage::delete($this->image);
     }
+
+    /**
+     * creates a relationship between category and posts.
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }
