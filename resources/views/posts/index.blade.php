@@ -13,6 +13,7 @@
           <thead>
             <th><b class="card-title">Image</b></th>
             <th><b class="card-title">Title</b></th>
+            <th><b class="card-title">Category</b></th>
             <th></th>
             <th></th>
           </thead>
@@ -23,6 +24,11 @@
                   <img src="{{asset("storage/$post->image")}}" width="100" height="100" alt="featured_image">
                 </td>
                 <td><i>{{$post->title}}</i></td>
+              <td>
+                <b>
+                  <i><a href="{{route('categories.edit', $post->category->id)}}">{{$post->category->name}}</a></i>
+                </b>
+              </td>
                 @if ($post->trashed())
                   <td>
                   <form action="{{route('restore-trash', $post->id)}}" method="POST">
