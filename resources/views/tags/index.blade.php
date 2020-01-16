@@ -52,7 +52,7 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    <p class="text-center text-bold">Are you sure you want to delete this Tag?</p>
+                    <p class="text-center text-bold">Are you sure you want to delete this tag?</p>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">No,not now</button>
