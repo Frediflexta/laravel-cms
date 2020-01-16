@@ -27,4 +27,17 @@ class Post extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    /**
+     * pivot table.
+     */
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class)->withTimestamps();
+    }
+
+    public function hasTags($tagId)
+    {
+        return in_array($tagId, $this->tags->modelKeys());
+    }
 }

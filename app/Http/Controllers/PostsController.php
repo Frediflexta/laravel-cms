@@ -6,6 +6,7 @@ use App\Category;
 use App\Http\Requests\Posts\CreatePostRequest;
 use App\Http\Requests\Posts\UpdatePostRequest;
 use App\Post;
+use App\Tag;
 
 class PostsController extends Controller
 {
@@ -31,7 +32,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view('posts.create')->with('categories', Category::all());
+        return view('posts.create')->with('categories', Category::all())->with('tags', Tag::all());
     }
 
     /**
@@ -41,9 +42,10 @@ class PostsController extends Controller
      */
     public function store(Post $post, CreatePostRequest $request)
     {
+        // dd($request->tags);
         $image = $request->image->store('posts');
 
-        $post->create([
+        $newPost = $post->create([
             'title' => $request->title,
             'description' => $request->description,
             'content' => $request->content,
@@ -51,6 +53,14 @@ class PostsController extends Controller
             'image' => $image,
             'category_id' => $request->category,
         ]);
+
+        /*
+         * check if a tag was added and attach it to the
+         * pivot table.
+         */
+        if ($request->tags) {
+            $newPost->tags()->attach($request->tags);
+        }
 
         session()->flash('success', 'A new post has been created');
 
@@ -77,7 +87,8 @@ class PostsController extends Controller
      */
     public function edit(Post $post)
     {
-        return view('posts.create')->with('post', $post)->with('categories', Category::all());
+        return view('posts.create')->with('post', $post)
+            ->with('categories', Category::all())->with('tags', Tag::all());
     }
 
     /**
@@ -98,6 +109,14 @@ class PostsController extends Controller
             $post->deleteImage();
 
             $data['image'] = $image;
+        }
+
+        /*
+         * check if there is a tag in the request
+         * and sync() it on update
+         */
+        if ($request->tags) {
+            $post->tags()->sync($request->tags);
         }
 
         // update attributes

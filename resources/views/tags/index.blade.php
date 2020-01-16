@@ -9,7 +9,7 @@
   <div class="card card-defult">
     <div class="card-header">Tags</div>
     <div class="card-body">
-      @if($tag->count() > 0)
+      @if($tags->count() > 0)
         <table class="table">
           <thead>
               <th><b>Name</b></th>
@@ -17,13 +17,15 @@
               <th></th>
           </thead>
           <tbody>
-            @foreach ($tag as $tag)
+            @foreach ($tags as $tag)
                 <tr>
                   <td>
                     <i>{{ $tag->name }}</i>
                   </td>
-                {{-- <td>{{$tag->posts->count()}}</td> --}}
-                <td>0</td>
+                <td>
+                  {{$tag->posts->count()}}
+                </td>
+
                   <td>
                     <a href={{ route('tags.edit', $tag->id) }} class="btn btn-primary btn-sm">Edit</a>
                     <button class="btn-sm btn-warning" onclick="handleDelete({{$tag->id}})">Delete</button>

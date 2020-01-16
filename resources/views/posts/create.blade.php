@@ -44,9 +44,27 @@
             <img src="{{asset("storage/$post->image")}}" width="200" height="200" alt="featured_image" class="mb-2">
           @endif
         </div>
+
         <div class="form-group">
           <label for="image">Image</label>
           <input type="file" id="image" class="form-control" name="image" value="">
+        </div>
+
+        <div class="form-group">
+          <label for="tags">Tag</label>
+          <select name="tags[]" id="tags" class="form-control" multiple>
+            @foreach ($tags as $tag)
+            <option value="{{$tag->id}}"
+              @if (isset($post))
+                  @if ($post->hasTags($tag->id))
+                      selected
+                  @endif
+              @endif
+              >
+              {{$tag->name}}
+            </option>
+            @endforeach
+          </select>
         </div>
 
         <div class="form-group">
